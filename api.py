@@ -68,6 +68,6 @@ async def get_item(project_name: str, building_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.put("/update-building-data/")
+@app.patch("/update-building-data/")
 async def update_item():
     return {'message':'Update not yet implemented'}
