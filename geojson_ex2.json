@@ -1,0 +1,76 @@
+{
+    "building_limits": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [0, 0],
+                            [5, 0],
+                            [5, 10],
+                            [0, 10]
+                        ]
+                    ]
+                }
+            },
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [5, 0],
+                            [10, 0],
+                            [10, 10],
+                            [5, 10]
+                        ]
+                    ]
+                }
+            }
+        ]
+    },
+    "height_plateaus": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [0, 0],
+                            [9, 0],
+                            [9, 10],
+                            [0, 10]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "elevation": 3.63
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [9, 0],
+                            [11, 0],
+                            [11, 10],
+                            [9, 10]
+                        ]
+                    ]
+                },
+                "properties": {
+                    "elevation": 2.5
+                }
+            }
+        ]
+    }
+}
