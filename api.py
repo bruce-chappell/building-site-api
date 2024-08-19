@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 import boto3
+from boto3.dynamodb.conditions import Key
 import json
 from decimal import Decimal
 from site_api.data_model import BuildSite
@@ -32,19 +33,34 @@ async def value_error_handler(request: Request, exc: ValueError):
 
 @app.post("/split-save-project-data/")
 async def create_item(item: BuildSite, project_name: str = 'tmp', tolerance: int = 6):
+    msg=''
     # Validate
     item.validate_site(tolerance)
-
-    # Split building limits
-    building_limits_gdf, height_plateaus_gdf = buildsite_to_geodataframes(item)
-    results = split_building_limits(project_name,building_limits_gdf, height_plateaus_gdf)
 
     # Connect to table
     dynamodb = boto3.resource("dynamodb")
     table_name = 'split-site-table'
     table = dynamodb.Table(table_name)
 
-    # prep data object for database
+    # Check if project exists in database, delte if it does to overwrite with new data
+    response = table.query(
+        KeyConditionExpression = Key('project_name').eq(project_name)
+    )
+    if response['Items']:
+        for i in response['Items']:
+            table.delete_item(
+                Key={
+                    'project_name':i['project_name'],
+                    'building_id':i['building_id']
+                }
+            )
+        msg += 'Old project entry deleted. '
+
+    # # Split building limits
+    building_limits_gdf, height_plateaus_gdf = buildsite_to_geodataframes(item)
+    results = split_building_limits(project_name,building_limits_gdf, height_plateaus_gdf)
+
+    # # prep data object for database
     for i in results:
         # change all floats to Decimal? Weird boto3 requirement
         item_out = json.loads(json.dumps(results[i]), parse_float=Decimal)
@@ -52,7 +68,7 @@ async def create_item(item: BuildSite, project_name: str = 'tmp', tolerance: int
             table.put_item(Item=item_out)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
-    return{'message':'Data saved to table'}
+    return{'message':msg +'New project data saved to table'}
 
     
 
@@ -70,4 +86,4 @@ async def get_item(project_name: str, building_id: int):
     
 @app.patch("/update-building-data/")
 async def update_item():
-    return {'message':'Update not yet implemented'}
+    return {'message':'Update not yet implemented, currently deleting and writing new entries to update'}
