@@ -7,6 +7,19 @@ import json
 from decimal import Decimal
 from site_api.data_model import BuildSite
 from site_api.helper_functions import buildsite_to_geodataframes, split_building_limits
+# import os
+# from dotenv import load_dotenv
+
+# load_dotenv()
+# a = os.environ.get('aws_access_key_id')
+
+# session = boto3.Session(
+#     aws_access_key_id=os.environ.get('aws_access_key_id'),
+#     aws_secret_access_key=os.environ.get('aws_secret_access_key'),
+#     region_name='eu-north'
+# )
+session= boto3.Session()
+dynamodb = session.resource("dynamodb")
 
 
 app = FastAPI()
@@ -38,7 +51,6 @@ async def create_item(item: BuildSite, project_name: str = 'tmp', tolerance: int
     item.validate_site(tolerance)
 
     # Connect to table
-    dynamodb = boto3.resource("dynamodb")
     table_name = 'split-site-table'
     table = dynamodb.Table(table_name)
 
@@ -75,7 +87,6 @@ async def create_item(item: BuildSite, project_name: str = 'tmp', tolerance: int
 @app.get("/get-building-data/")
 async def get_item(project_name: str, building_id: int):
     # Connect to table
-    dynamodb = boto3.resource("dynamodb")
     table_name = 'split-site-table'
     table = dynamodb.Table(table_name)
     try:
