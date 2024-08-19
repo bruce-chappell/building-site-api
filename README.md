@@ -7,3 +7,5 @@ Per now, the api can handle accepting one project at a time with multiple buildi
 Project_name is the primary key, and building_id is the sort key. Building_id will be assigned by the API by order of the building sites in the input data.
 
 The FastAPI docs can be seen at http://16.171.174.108/docs. The split-save-project-data post function validates the user inputs and saves the data. If there is already a project with the same name in the database, the old data is overwritten with the new data. The get-building-data get function can be used to access saved data in the table.
+
+To run the API locally, run `poetry run uvicorn api:app` in the project folder and access the API at 127.0.0.1:8000
