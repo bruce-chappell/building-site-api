@@ -8,4 +8,4 @@ Project_name is the primary key, and building_id is the sort key. Building_id wi
 
 The FastAPI docs can be seen at http://16.171.174.108/docs. The split-save-project-data post function validates the user inputs and saves the data. If there is already a project with the same name in the database, the old data is overwritten with the new data. The get-building-data get function can be used to access saved data in the table.
 
-To run the API locally, run `poetry run uvicorn api:app` in the project folder and access the API at 127.0.0.1:8000
+To run the API locally, run `poetry run uvicorn api:app` in the project folder and access the API at 127.0.0.1:8000. NOTE: you won't have access to the AWS resources (rading/writing to table) as the connection is authenticated through my user, but you can validate data.
